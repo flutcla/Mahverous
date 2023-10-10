@@ -21,3 +21,15 @@
     j == 北 and
     雀頭(m, n)
 
+字一色:
+  制約:
+    刻子(a, b, c) and
+    a.種別 == '字牌' and
+    刻子(d, e, f) and
+    d.種別 == '字牌' and
+    刻子(g, h, i) and
+    g.種別 == '字牌' and
+    刻子(j, k, l) and
+    j.種別 == '字牌' and
+    雀頭(m, n) and
+    m.種別 == '字牌'

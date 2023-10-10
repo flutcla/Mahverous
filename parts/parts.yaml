@@ -9,8 +9,9 @@
 
 順子 a b c:
   制約:
-    a.種別 == b.種別 and
-    b.種別 == c.種別 and
+    a.種別 == '数牌' and
+    b.種別 == '数牌' and
+    c.種別 == '数牌' and
     a.柄 == b.柄 and
     b.柄 == c.柄 and
     a.数値 + 1 == b.数値 and
