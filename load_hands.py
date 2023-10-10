@@ -1,8 +1,11 @@
 import glob
 import yaml
 
+import load_rule
 import load_pies
 import load_parts
+
+rule = load_rule.load_rule()
 
 pies = load_pies.load_pies()
 for name, pie in pies.items():
@@ -13,7 +16,7 @@ for name, part in parts.items():
   globals()[name] = part
 
 class Hand():
-  variables = [chr(i) for i in range(ord('a'), ord('a')+15)]
+  variables = [chr(i) for i in range(ord('a'), ord('a')+rule['完成形の枚数'])]
   def __init__(self, restrictions):
     self.restrictions = restrictions
 
