@@ -6,6 +6,11 @@ class Pie():
     for k, v in kwargs.items():
       setattr(self, k, v)
 
+  def __eq__(self, __value: object) -> bool:
+    if not isinstance(__value, Pie):
+      return False
+    return self.__dict__ == __value.__dict__
+
 def load_pies():
   pies = {}
   for fpath in glob.glob('pie/*.yaml'):

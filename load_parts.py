@@ -6,7 +6,7 @@ class Parts():
     this.variables = variables
     this.restrictions = restrictions
 
-  def check(this, *args):
+  def __call__(this, *args):
     loc = {}
     for i, arg in enumerate(args):
       loc[this.variables[i]] = arg

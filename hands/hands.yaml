@@ -1,6 +1,23 @@
 大三元:
-  変数: a, b, c, d
-  手牌:
-    刻子(白, 白, 白)
-    刻子(發, 發, 發)
-    刻子(中, 中, 中)
+  制約:
+    刻子(a, b, c) and
+    a == 白 and
+    刻子(d, e, f) and
+    d == 發 and
+    刻子(g, h, i) and
+    g == 中 and
+    刻子(j, k, l) or 順子(j, k, l) and
+    雀頭(m, n)
+
+大四喜:
+  制約:
+    刻子(a, b, c) and
+    a == 東 and
+    刻子(d, e, f) and
+    d == 南 and
+    刻子(g, h, i) and
+    g == 西 and
+    刻子(j, k, l) and
+    j == 北 and
+    雀頭(m, n)
+
