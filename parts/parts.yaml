@@ -1,3 +1,17 @@
-雀頭 a b:
+雀頭 s t:
   制約:
-    a == b
+    s == t
+
+刻子 a b c:
+  制約:
+    a == b and
+    b == c
+
+順子 a b c:
+  制約:
+    a.種別 == b.種別 and
+    b.種別 == c.種別 and
+    a.柄 == b.柄 and
+    b.柄 == c.柄 and
+    a.数値 + 1 == b.数値 and
+    b.数値 + 1 == c.数値
