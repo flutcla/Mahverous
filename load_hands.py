@@ -42,14 +42,13 @@ class Hand():
     return True
 
   def check(this, pies: list[Pie]):
-    return this.check_memo_rec([], pies, this.structure)
+    return this.check_rec([], pies, this.structure)
 
-  def check_memo_rec(
+  def check_rec(
       this,
       current_pies: list[Pie],
       remaining_pies: list[Pie],
       sizes: list[int],
-      memo: dict[tuple, bool] = {}
   ) -> bool:
     if not sizes and not remaining_pies:
       return True
@@ -70,11 +69,10 @@ class Hand():
       remaining = [
           remaining_pies[i] for i in pies_index if i not in current_index_group
       ]
-      res = this.check_memo_rec(
+      res = this.check_rec(
           current_pies + current_group,
           remaining,
           sizes[1:],
-          memo
       )
       if res:
         return True
