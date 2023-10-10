@@ -4,12 +4,16 @@ import yaml
 
 
 class Pie():
-  def __init__(self, **kwargs):
+  def __init__(self, display_str, **kwargs):
+    self.display_str = display_str
     for k, v in kwargs.items():
       setattr(self, k, v)
 
+  def __str__(self):
+    return self.display_str
+
   def __repr__(self):
-    return f'Pie({self.__dict__})'
+    return self.display_str
 
   def __eq__(self, __value: object) -> bool:
     if not isinstance(__value, Pie):
@@ -29,5 +33,5 @@ def load_pies():
 
   ret = {}
   for k, v in pies.items():
-    ret[k] = Pie(**v)
+    ret[k] = Pie(k, **v)
   return ret
