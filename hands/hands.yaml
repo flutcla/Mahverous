@@ -49,3 +49,25 @@
     刻子(g, h, i) and
     刻子(j, k, l) and
     雀頭(m, n)
+
+門前清自摸和:
+  構造:
+    3 3 3 3 2
+  制約:
+    刻子(a, b, c) or 順子(a, b, c) and
+    刻子(d, e, f) or 順子(d, e, f) and
+    刻子(g, h, i) or 順子(g, h, i) and
+    刻子(j, k, l) or 順子(j, k, l) and
+    雀頭(m, n)
+
+七対子:
+  構造:
+    2 2 2 2 2 2 2
+  制約:
+    雀頭(a, b) and
+    雀頭(c, d) and
+    雀頭(e, f) and
+    雀頭(g, h) and
+    雀頭(i, j) and
+    雀頭(k, l) and
+    雀頭(m, n)
