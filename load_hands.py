@@ -3,6 +3,7 @@
 import glob
 from itertools import combinations
 from typing import Any
+from concurrent.futures import ProcessPoolExecutor
 
 import yaml
 
@@ -42,7 +43,8 @@ class Hand():
     return True
 
   def check(this, pies: list[Pie]):
-    return this.check_rec([], pies, this.structure)
+    # return this.check_rec([], pies, this.structure)
+    return this.check_rec_parallel([], pies, this.structure, max_workers=8)
 
   def check_rec(
       this,
@@ -77,6 +79,52 @@ class Hand():
       if res:
         return True
     return False
+
+  def worker(this, current_pies, remaining_pies, sizes, current_index_group):
+    current_group = [remaining_pies[i] for i in current_index_group]
+    if not this.partial_check(current_pies + current_group):
+        return False
+
+    pies_index = range(len(remaining_pies))
+    remaining = [
+        remaining_pies[i] for i in pies_index if i not in current_index_group
+    ]
+
+    return this.check_rec(
+        current_pies + current_group,
+        remaining,
+        sizes[1:],
+    )
+
+  def check_rec_parallel(
+      this,
+      current_pies,
+      remaining_pies,
+      sizes,
+      max_workers=4
+  ) -> bool:
+    if not sizes and not remaining_pies:
+        return True
+    elif not sizes or not remaining_pies:
+        return False
+
+    current_size = sizes[0]
+    if current_size > len(remaining_pies):
+        return False
+
+    pies_index = range(len(remaining_pies))
+    current_index_conbinations = list(combinations(pies_index, current_size))
+
+    with ProcessPoolExecutor(max_workers=max_workers) as executor:
+        results = list(executor.map(
+            this.worker,
+            [current_pies] * len(current_index_conbinations),
+            [remaining_pies] * len(current_index_conbinations),
+            [sizes] * len(current_index_conbinations),
+            current_index_conbinations,
+        ))
+
+    return any(results)
 
 
 def load_hands() -> dict[str, Hand]:
