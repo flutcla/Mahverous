@@ -1,5 +1,7 @@
-import yaml
 import glob
+
+import yaml
+
 
 class Pie():
   def __init__(self, **kwargs):
@@ -13,6 +15,10 @@ class Pie():
     if not isinstance(__value, Pie):
       return False
     return self.__dict__ == __value.__dict__
+
+  def __hash__(self) -> int:
+    return hash(tuple(self.__dict__.items()))
+
 
 def load_pies():
   pies = {}

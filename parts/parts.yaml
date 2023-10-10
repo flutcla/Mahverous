@@ -1,13 +1,16 @@
 雀頭 s t:
+  順番: False
   制約:
     s == t
 
 刻子 a b c:
+  順番: False
   制約:
     a == b and
     b == c
 
 順子 a b c:
+  順番: True
   制約:
     a.種別 == '数牌' and
     b.種別 == '数牌' and

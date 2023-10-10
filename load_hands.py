@@ -1,11 +1,15 @@
+# mypy: disable-error-code="name-defined"
+
 import glob
+from itertools import combinations
 from typing import Any, Generator, Literal
+
 import yaml
 
-import load_rule
-import load_pies
-from load_pies import Pie
 import load_parts
+import load_pies
+import load_rule
+from load_pies import Pie
 
 rule = load_rule.load_rule()
 
@@ -17,9 +21,11 @@ parts = load_parts.load_parts()
 for name, part in parts.items():
   globals()[name] = part
 
+
 class Hand():
-  variables = [chr(i) for i in range(ord('a'), ord('a')+rule['完成形の枚数'])]
-  def __init__(self, restrictions):
+  variables = [chr(i) for i in range(ord('a'), ord('a') + rule['完成形の枚数'])]
+
+  def __init__(self, structure: list[int], restrictions: list[str]):
     self.restrictions = restrictions
 
   def __call__(this, *args):
@@ -46,9 +52,36 @@ class Hand():
           exec(f'ret = ({restriction})', globals(), loc)
           if loc['ret'] is False:
             return False
-        except Exception as e:
+        except Exception:
           continue
     return True
+
+  memo: dict[tuple, list[list[int]]] = {}
+
+  @classmethod
+  def split_array_memo(cls, arr, sizes: list[int]) -> list[list[int]]:
+    if not sizes:
+      return [arr]
+
+    key = (tuple(arr), tuple(sizes))
+    if key in cls.memo:
+      return cls.memo[key]
+
+    size = sizes[0]
+    if size > len(arr):
+      return [arr]
+
+    current_combinations = list(combinations(range(len(arr)), size))
+    splits: list[list[int]] = []
+    for current_group in current_combinations:
+      remaining = [arr[i] for i in range(len(arr)) if i not in current_group]
+
+      for sub_split in Hand.split_array_memo(remaining, sizes[1:]):
+        splits.append([arr[i] for i in current_group] + sub_split)
+
+    cls.memo[key] = splits
+    return splits
+
 
 def load_hands() -> dict[str, Hand]:
   hands: dict[str, Any] = {}
@@ -58,10 +91,12 @@ def load_hands() -> dict[str, Hand]:
 
   hands_func = {}
   for name, body in hands.items():
+    structure = list(map(int, body['構造'].split(' ')))
     restrictions = body['制約'].split('and')
-    hands_func[name] = Hand(restrictions)
+    hands_func[name] = Hand(structure, restrictions)
 
   return hands_func
+
 
 def check_hands(pies: list[Pie]):
   hands = load_hands()
@@ -73,7 +108,13 @@ def check_hands(pies: list[Pie]):
         break
   return result
 
-def check_rec(hand: Hand, current_pies: list[Pie], next_pie: Pie, left_pies: list[Pie]):
+
+def check_rec(
+    hand: Hand,
+    current_pies: list[Pie],
+    next_pie: Pie,
+    left_pies: list[Pie]
+):
   current_pies = current_pies.copy()
   left_pies = left_pies.copy()
   it = hand.check_it()
@@ -87,3 +128,14 @@ def check_rec(hand: Hand, current_pies: list[Pie], next_pie: Pie, left_pies: lis
         return True
   except StopIteration as e:
     return e.value
+
+
+if __name__ == '__main__':
+  # だいたい 1分半かかる
+  print(Hand.split_array_memo([
+      東, 東, 東,
+      南, 南, 南,
+      西, 西, 西,
+      北, 北, 北,
+      白, 白
+  ], [3, 3, 3, 3, 2])[5])
