@@ -2,72 +2,73 @@
   構造:
     3 3 3 3 2
   制約:
-    刻子(a, b, c) and
-    a == 白 and
-    刻子(d, e, f) and
-    d == 發 and
-    刻子(g, h, i) and
-    g == 中 and
-    刻子(j, k, l) or 順子(j, k, l) and
-    雀頭(m, n)
+    - 刻子(a, b, c)
+    - a == 白
+    - 刻子(d, e, f)
+    - d == 發
+    - 刻子(g, h, i)
+    - g == 中
+    - 刻子(j, k, l) or 順子(j, k, l)
+    - 雀頭(m, n)
 
 大四喜:
   構造:
     3 3 3 3 2
   制約:
-    刻子(a, b, c) and
-    a == 東 and
-    刻子(d, e, f) and
-    d == 南 and
-    刻子(g, h, i) and
-    g == 西 and
-    刻子(j, k, l) and
-    j == 北 and
-    雀頭(m, n)
+    - 刻子(a, b, c)
+    - a == 東
+    - 刻子(d, e, f)
+    - d == 南
+    - 刻子(g, h, i)
+    - g == 西
+    - 刻子(j, k, l)
+    - j == 北
+    - 雀頭(m, n)
 
 字一色:
   構造:
     3 3 3 3 2
   制約:
-    刻子(a, b, c) and
-    a.種別 == '字牌' and
-    刻子(d, e, f) and
-    d.種別 == '字牌' and
-    刻子(g, h, i) and
-    g.種別 == '字牌' and
-    刻子(j, k, l) and
-    j.種別 == '字牌' and
-    雀頭(m, n) and
-    m.種別 == '字牌'
+    - 刻子(a, b, c)
+    - a.種別 == '字牌'
+    - 刻子(d, e, f)
+    - d.種別 == '字牌'
+    - 刻子(g, h, i)
+    - g.種別 == '字牌'
+    - 刻子(j, k, l)
+    - j.種別 == '字牌'
+    - 雀頭(m, n)
+    - m.種別 == '字牌'
 
 四暗刻:
   構造:
     3 3 3 3 2
   制約:
-    刻子(a, b, c) and
-    刻子(d, e, f) and
-    刻子(g, h, i) and
-    刻子(j, k, l) and
-    雀頭(m, n)
+    - 刻子(a, b, c)
+    - 刻子(d, e, f)
+    - 刻子(g, h, i)
+    - 刻子(j, k, l)
+    - 雀頭(m, n)
 
 門前清自摸和:
   構造:
     3 3 3 3 2
   制約:
-    刻子(a, b, c) or 順子(a, b, c) and
-    刻子(d, e, f) or 順子(d, e, f) and
-    刻子(g, h, i) or 順子(g, h, i) and
-    刻子(j, k, l) or 順子(j, k, l) and
-    雀頭(m, n)
+    - 刻子(a, b, c) or 順子(a, b, c)
+    - 刻子(d, e, f) or 順子(d, e, f)
+    - 刻子(g, h, i) or 順子(g, h, i)
+    - 刻子(j, k, l) or 順子(j, k, l)
+    - 雀頭(m, n)
 
 七対子:
   構造:
     2 2 2 2 2 2 2
   制約:
-    雀頭(a, b) and
-    雀頭(c, d) and
-    雀頭(e, f) and
-    雀頭(g, h) and
-    雀頭(i, j) and
-    雀頭(k, l) and
-    雀頭(m, n)
+    - 雀頭(a, b)
+    - 雀頭(c, d)
+    - 雀頭(e, f)
+    - 雀頭(g, h)
+    - 雀頭(i, j)
+    - 雀頭(k, l)
+    - 雀頭(m, n)
+

@@ -88,7 +88,7 @@ def load_hands() -> dict[str, Hand]:
   hands_func = {}
   for name, body in hands.items():
     structure = list(map(int, body['構造'].split(' ')))
-    restrictions = body['制約'].split('and')
+    restrictions = body['制約']
     hands_func[name] = Hand(structure, restrictions)
 
   return hands_func

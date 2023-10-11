@@ -40,7 +40,7 @@ def load_parts():
   parts_func = {}
   for name, body in parts.items():
     name, *fargs = name.split()
-    restrictions = body['制約'].split('and')
+    restrictions = body['制約']
     ordered = body['順番']
     parts_func[name] = Parts(fargs, restrictions, ordered)
 
