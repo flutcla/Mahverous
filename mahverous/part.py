@@ -26,7 +26,7 @@ class Part():
   def __call__(this, *args):
     # 順番が存在するパーツを検査する場合、全通り試す
     if this.ordered:
-      args_perm = permutations(args)
+      args_perm = list(permutations(args))
     else:
       args_perm = [args]
     for args in args_perm:
@@ -42,18 +42,25 @@ class Part():
     return False
 
 
+PARTS_CACHE: dict[str, Part] = {}
+
+
 def load_parts(dir_name: str = 'parts') -> dict[str, Part]:
   """Load parts from yaml files in the specified directory."""
+  global PARTS_CACHE
+  if PARTS_CACHE:
+    return PARTS_CACHE
   parts: dict[str, Any] = {}
   for fpath in glob.glob(f'{DIR}/{dir_name}/*.yaml'):
     with open(fpath, 'r') as f:
       parts |= yaml.safe_load(f)
 
-  parts_func = {}
+  parts_func: dict[str, Part] = {}
   for name, body in parts.items():
     name, *fargs = name.split()
     restrictions = body['制約']
     ordered = body['順番']
     parts_func[name] = Part(fargs, restrictions, ordered)
 
+  PARTS_CACHE = parts_func
   return parts_func
