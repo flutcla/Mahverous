@@ -2,22 +2,28 @@
 
 from timeit import timeit
 
-import load_hands
-import load_parts
-import load_pies
-from load_pies import Pie
+import os
+from mahverous.init import init
+from mahverous.pie import load_pies, Pie
+from mahverous.part import load_parts
+from mahverous.hand import load_hands, check_hands
 
-pies = load_pies.load_pies()
+CWD = os.getcwd()
+DIR = f'{CWD}/mahjong'
+
+init(DIR)
+
+pies = load_pies()
 for name, pie in pies.items():
-  globals()[name] = pie
+  locals()[name] = pie
 
-parts = load_parts.load_parts()
+parts = load_parts()
 for name, part in parts.items():
-  globals()[name] = part
+  locals()[name] = part
 
-hands = load_hands.load_hands()
+hands = load_hands()
 for name, hand in hands.items():
-  globals()[name] = hand
+  locals()[name] = hand
 
 
 assert 雀頭(白, 白)
@@ -71,8 +77,8 @@ assert 字一色([
 def check(hands: list[Pie], n=10):
   print('----------')
   print(hands)
-  t = timeit(lambda: load_hands.check_hands(hands), number=n) / n
-  print(load_hands.check_hands(hands))
+  t = timeit(lambda: check_hands(hands), number=n) / n
+  print(check_hands(hands))
   print(f'平均所要時間: {t}')
 
 
@@ -108,4 +114,12 @@ check([
     索5, 索5,
     索6, 索6,
     索7, 索7,
+], n=1)
+
+check([
+    索1, 索2, 索3,
+    索4, 索5, 索6,
+    索7, 索8, 索9,
+    筒1, 筒2, 筒3,
+    筒4, 筒5
 ], n=1)

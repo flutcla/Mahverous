@@ -1,31 +1,36 @@
-# mypy: disable-error-code="name-defined"
-
 import glob
 from itertools import combinations
 from typing import Any
-
 import yaml
 
-import load_parts
-import load_pies
-import load_rule
-from load_pies import Pie
+from mahverous.part import load_parts
+from mahverous.rule import load_rule
+from mahverous.pie import Pie, load_pies
 
-rule = load_rule.load_rule()
 
-for name, pie in load_pies.load_pies().items():
-  globals()[name] = pie
+DIR = ''
+rule = None
 
-for name, part in load_parts.load_parts().items():
-  globals()[name] = part
+
+def init(working_dir: str):
+  global DIR
+  DIR = working_dir
+
+  global rule
+  rule = load_rule()
+
+  for name, pie in load_pies().items():
+    globals()[name] = pie
+
+  for name, part in load_parts().items():
+    globals()[name] = part
 
 
 class Hand():
-  variables = [chr(i) for i in range(ord('a'), ord('a') + rule['完成形の枚数'])]
-
   def __init__(self, structure: list[int], restrictions: list[str]):
     self.structure = structure
     self.restrictions = restrictions
+    self.variables = [chr(i) for i in range(ord('a'), ord('a') + rule['完成形の枚数'])]  # type: ignore
 
   def __call__(this, pies):
     return this.partial_check(pies)
@@ -79,9 +84,10 @@ class Hand():
     return False
 
 
-def load_hands() -> dict[str, Hand]:
+def load_hands(dir_name: str = 'hands') -> dict[str, Hand]:
+  """Load hands from yaml files in the specified directory."""
   hands: dict[str, Any] = {}
-  for fpath in glob.glob('hands/*.yaml'):
+  for fpath in glob.glob(f'{DIR}/{dir_name}/*.yaml'):
     with open(fpath, 'r') as f:
       hands |= yaml.safe_load(f)
 
@@ -94,74 +100,10 @@ def load_hands() -> dict[str, Hand]:
   return hands_func
 
 
-def check_hands(pies: list[Pie]):
-  hands = load_hands()
+def check_hands(pies: list[Pie], dir_name='hands'):
+  hands = load_hands(dir_name)
   result = []
   for name, hand in hands.items():
     if hand.check(pies):
       result.append(name)
   return result
-
-
-if __name__ == '__main__':
-
-  hands = load_hands()
-  for name, hand in hands.items():
-    globals()[name] = hand
-
-  assert 大三元.partial_check([
-      白, 白, 白,
-  ])
-  assert not 大三元.partial_check([
-      白, 發, 發,
-  ])
-
-  assert not 大三元.check([
-      東, 東, 東,
-      南, 南, 南,
-      西, 西, 西,
-      北, 北, 北,
-      白, 白
-  ])
-
-  assert 大四喜.check([
-      東, 東, 東,
-      南, 南, 南,
-      西, 西, 西,
-      北, 北, 白,
-      白, 北
-  ])
-
-  assert 大四喜.check([
-      白, 白,
-      北, 北, 北,
-      西, 西, 西,
-      南, 南, 南,
-      東, 東, 東,
-  ])
-
-  assert 大三元.check([
-      索4, 索2, 索3,
-      中, 中, 中,
-      發, 發, 發,
-      筒4, 筒4,
-      白, 白, 白,
-  ])
-
-  assert 七対子.check([
-      索1, 索1,
-      索2, 索2,
-      索3, 索3,
-      索4, 索4,
-      索5, 索5,
-      索6, 索6,
-      索7, 索7,
-  ])
-
-  assert not 七対子.check([
-      東, 東, 東,
-      南, 南, 南,
-      西, 西, 西,
-      北, 北, 北,
-      白, 白
-  ])

@@ -1,10 +1,23 @@
 import glob
 from itertools import permutations
+from typing import Any
 
 import yaml
 
+from mahverous.pie import load_pies
 
-class Parts():
+DIR = ''
+
+
+def init(working_dir: str):
+  global DIR
+  DIR = working_dir
+  for name, pie in load_pies().items():
+    globals()[name] = pie
+
+
+class Part():
+  """A class representing a part."""
   def __init__(this, variables, restrictions, ordered):
     this.variables = variables
     this.restrictions = restrictions
@@ -17,9 +30,7 @@ class Parts():
     else:
       args_perm = [args]
     for args in args_perm:
-      loc = {}
-      for i, arg in enumerate(args):
-        loc[this.variables[i]] = arg
+      loc = {this.variables[i]: arg for i, arg in enumerate(args)}
 
       for restriction in this.restrictions:
         exec(f'ret = ({restriction})', globals(), loc)
@@ -31,9 +42,10 @@ class Parts():
     return False
 
 
-def load_parts():
-  parts = {}
-  for fpath in glob.glob('parts/*.yaml'):
+def load_parts(dir_name: str = 'parts') -> dict[str, Part]:
+  """Load parts from yaml files in the specified directory."""
+  parts: dict[str, Any] = {}
+  for fpath in glob.glob(f'{DIR}/{dir_name}/*.yaml'):
     with open(fpath, 'r') as f:
       parts |= yaml.safe_load(f)
 
@@ -42,6 +54,6 @@ def load_parts():
     name, *fargs = name.split()
     restrictions = body['制約']
     ordered = body['順番']
-    parts_func[name] = Parts(fargs, restrictions, ordered)
+    parts_func[name] = Part(fargs, restrictions, ordered)
 
   return parts_func
