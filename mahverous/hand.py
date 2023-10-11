@@ -33,7 +33,7 @@ class Hand():
     self.variables = [chr(i) for i in range(ord('a'), ord('a') + rule['完成形の枚数'])]
 
   def __call__(this, pies):
-    return this.partial_check(pies)
+    return this.check(pies)
 
   def replace_allmighty(this, pies_list: list[list[Pie]]):
     all_pies = load_pies().copy()
