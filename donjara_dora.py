@@ -1,4 +1,6 @@
 # mypy: disable-error-code="name-defined"
+# https://www.asovision.com/donjara/doraemon/
+# https://www.asovision.com/donjara/dx/pdf/score.pdf
 
 from timeit import timeit
 
