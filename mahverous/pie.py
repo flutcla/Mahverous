@@ -56,6 +56,8 @@ def load_pies(dir_name: str = 'pies') -> dict[str, Pie]:
   if 'COMMON' in pies.keys():
     common_param = pies['COMMON']
     pies.pop('COMMON')
+  else:
+    common_param = {}
 
   ret = {}
   for k, v in pies.items():
