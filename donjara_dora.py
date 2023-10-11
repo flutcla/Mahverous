@@ -9,7 +9,7 @@ from mahverous.part import load_parts
 from mahverous.hand import load_hands, check_hands
 
 CWD = os.getcwd()
-DIR = f'{CWD}/donjara'
+DIR = f'{CWD}/donjara_dora'
 
 init(DIR)
 
@@ -53,7 +53,7 @@ check([
 ])
 
 check([
-    のび太, のび太, のび太,
+    のび太, のび太T, のび太,
     のび太のママ, のび太のママ, のび太のママ,
     のび太のパパ, のび太のパパ, のび太のパパ,
 ])
