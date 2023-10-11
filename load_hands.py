@@ -37,7 +37,7 @@ class Hand():
         exec(f'ret = ({restriction})', globals(), loc)
         if loc['ret'] is False:
           return False
-      except Exception:
+      except NameError:
         return True
     return True
 
