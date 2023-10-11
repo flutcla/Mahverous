@@ -29,8 +29,14 @@ for name, hand in hands.items():
 def check(hands, n=10):
   print('----------')
   print(hands)
-  t = timeit(lambda: check_hands(hands), number=n) / n
-  print(check_hands(hands))
+  res = []
+
+  def inner():
+    if not res:
+      for r in check_hands(hands):
+        res.append(r)
+  t = timeit(inner, number=n) / n
+  print(res)
   print(f'平均所要時間: {t}')
 
 
@@ -62,4 +68,10 @@ check([
     オールマイティ, オールマイティ, のび太,
     のび太のママ, のび太のママ, のび太のママ,
     のび太のパパ, のび太のパパ, のび太のパパ,
-], n=1)
+], n=5)
+
+check([
+    ドラえもん, ドラえもんT, のび太,
+    のび太T, しずか, しずかT,
+    ドラえもん, のび太, スネ夫
+])

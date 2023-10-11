@@ -63,8 +63,12 @@ class Hand():
           exec(f'ret = ({restriction})', globals(), loc)
           if loc['ret'] is False:
             break
-        except NameError:
-          return True
+        except NameError as e:
+          non_defined_var = str(e).split("'")[1]
+          if non_defined_var in this.variables:
+            return True
+          else:
+            raise e
       else:
         return True
     return False
