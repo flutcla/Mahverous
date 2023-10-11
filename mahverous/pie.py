@@ -41,7 +41,10 @@ def load_pies(dir_name: str = 'pies') -> dict[str, Pie]:
       pie = yaml.safe_load(f)
       pies |= pie
 
+  if 'COMMON' in pies.keys():
+    common_param = pies['COMMON']
+
   ret = {}
   for k, v in pies.items():
-    ret[k] = Pie(k, **v)
+    ret[k] = Pie(k, **(common_param | v))
   return ret

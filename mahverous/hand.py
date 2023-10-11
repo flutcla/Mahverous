@@ -93,7 +93,7 @@ def load_hands(dir_name: str = 'hands') -> dict[str, Hand]:
 
   hands_func = {}
   for name, body in hands.items():
-    structure = list(map(int, body['構造'].split(' ')))
+    structure = list(map(int, str(body['構造']).split(' ')))
     restrictions = body['制約']
     hands_func[name] = Hand(structure, restrictions)
 
