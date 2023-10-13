@@ -1,4 +1,4 @@
-from mahverous import rule, pie, part, hand
+from mahverous import hand, part, pie, rule
 
 
 def init(working_dir: str):

@@ -1,13 +1,13 @@
 import glob
 from itertools import combinations
 from typing import Any
+
 import yaml
 
 from mahverous.part import load_parts
-from mahverous.rule import load_rule
 from mahverous.pie import Pie, load_pies
 from mahverous.restriction_builder import build_restriction
-
+from mahverous.rule import load_rule
 
 DIR = ''
 rule: Any = None

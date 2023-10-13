@@ -1,6 +1,7 @@
 from collections import deque
 from typing import Any, Generator
-from sympy import Symbol, And, Or, to_cnf
+
+from sympy import And, Or, Symbol, to_cnf
 
 
 class Builder():
