@@ -85,9 +85,6 @@ def test():
   ])
 
 
-test()
-
-
 def check(hands, n=10):
   print('----------')
   print(hands)

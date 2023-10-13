@@ -6,6 +6,7 @@ import yaml
 from mahverous.part import load_parts
 from mahverous.rule import load_rule
 from mahverous.pie import Pie, load_pies
+from mahverous.restriction_builder import build_restriction
 
 
 DIR = ''
@@ -50,9 +51,12 @@ class Hand():
   def partial_check(this, pies: list[Pie]):
     # オールマイティがある場合、全牌を試す
     all_pies = load_pies().copy()
-    allmighty = all_pies.pop('オールマイティ')
-    if allmighty in pies:
-      pies_list = this.replace_allmighty([pies])
+    if 'オールマイティ' in all_pies.keys():
+      allmighty = all_pies.pop('オールマイティ')
+      if allmighty in pies:
+        pies_list = this.replace_allmighty([pies])
+      else:
+        pies_list = [pies]
     else:
       pies_list = [pies]
 
@@ -127,7 +131,7 @@ def load_hands(dir_name: str = 'hands') -> dict[str, Hand]:
   hands_func: dict[str, Hand] = {}
   for name, body in hands.items():
     structure = list(map(int, str(body['構造']).split(' ')))
-    restrictions = body['制約']
+    restrictions = build_restriction(body['制約'])
     hands_func[name] = Hand(structure, restrictions)
 
   HANDS_CACHE = hands_func

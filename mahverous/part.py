@@ -5,6 +5,7 @@ from typing import Any
 import yaml
 
 from mahverous.pie import load_pies
+from mahverous.restriction_builder import Builder, build_restriction
 
 DIR = ''
 
@@ -14,6 +15,9 @@ def init(working_dir: str):
   DIR = working_dir
   for name, pie in load_pies().items():
     globals()[name] = pie
+
+  for name, part in load_parts().items():
+    globals()[name] = part
 
 
 class Part():
@@ -58,8 +62,8 @@ def load_parts(dir_name: str = 'parts') -> dict[str, Part]:
   parts_func: dict[str, Part] = {}
   for name, body in parts.items():
     name, *fargs = name.split()
-    restrictions = body['制約']
-    ordered = body['順番']
+    restrictions = build_restriction(body['制約'])
+    ordered = body.get('順番', False)
     parts_func[name] = Part(fargs, restrictions, ordered)
 
   PARTS_CACHE = parts_func
