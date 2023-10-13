@@ -115,8 +115,8 @@ NEX_US a b c d e:
       }'
 
 
-a b c d e:
-  制約:
-    - '{a, b, c, d, e} == {
+# a b c d e:
+#   制約:
+#     - '{a, b, c, d, e} == {
 
-      }'
+#       }'
