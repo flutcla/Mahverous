@@ -1,12 +1,12 @@
 # mypy: disable-error-code="name-defined"
 
+import os
 from timeit import timeit
 
-import os
+from mahverous.hand import check_hands, load_hands
 from mahverous.init import init
-from mahverous.pie import load_pies, Pie
 from mahverous.part import load_parts
-from mahverous.hand import load_hands, check_hands
+from mahverous.pie import Pie, load_pies
 
 CWD = os.getcwd()
 DIR = f'{CWD}/mahjong'

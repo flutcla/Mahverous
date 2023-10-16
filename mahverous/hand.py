@@ -24,15 +24,16 @@ def init(working_dir: str) -> None:
 
 
 class Hand():
-  def __init__(self, name: str, structure: list[int], restrictions: list[str], score: int):
+  def __init__(self, name: str, structure: list[int], restrictions: list[str], prescript: list[str], postscript: list[str]) -> None:
     self.name = name
     self.structure = structure
     self.restrictions = restrictions
-    self.score = score
+    self.prescript = prescript
+    self.postscript = postscript
     self.variables = [chr(i) for i in range(ord('a'), ord('a') + Rule().hand_count)]
 
-  def __call__(this, pies: list[Pie]) -> bool:
-    return this.check(pies)
+  def __call__(self, pies: list[Pie]) -> bool:
+    return self.check(pies)
 
   def __str__(self) -> str:
     return self.name
@@ -40,7 +41,7 @@ class Hand():
   def __repr__(self) -> str:
     return str(self)
 
-  def replace_allmighty(this, pies_list: list[list[Pie]]) -> list[list[Pie]]:
+  def replace_allmighty(self, pies_list: list[list[Pie]]) -> list[list[Pie]]:
     all_pies = load_pies().copy()
     allmighty = all_pies.pop('オールマイティ')
     if allmighty not in pies_list[0]:
@@ -50,73 +51,95 @@ class Hand():
       idx = pies.index(allmighty)
       for pie in all_pies.values():
         ret.append([pie if i == idx else p for i, p in enumerate(pies)])
-    return this.replace_allmighty(ret)
+    return self.replace_allmighty(ret)
 
-  def partial_check(this, pies: list[Pie]) -> bool:
+  def partial_check(self, pies: list[Pie]) -> tuple[bool, list[Pie]]:
     # オールマイティがある場合、全牌を試す
     all_pies = load_pies().copy()
     if 'オールマイティ' in all_pies.keys():
       allmighty = all_pies.pop('オールマイティ')
       if allmighty in pies:
-        pies_list = this.replace_allmighty([pies])
+        pies_list = self.replace_allmighty([pies])
       else:
         pies_list = [pies]
     else:
       pies_list = [pies]
 
     for pies in pies_list:
-      loc = {this.variables[i]: pie for i, pie in enumerate(pies)}
-      for restriction in this.restrictions:
+      loc = {self.variables[i]: pie for i, pie in enumerate(pies)}
+      for restriction in self.restrictions:
         try:
           exec(f'ret = ({restriction})', globals(), loc)
           if loc['ret'] is False:
             break
         except NameError as e:
           non_defined_var = str(e).split("'")[1]
-          if non_defined_var in this.variables:
-            return True
+          if non_defined_var in self.variables:
+            return True, []
           else:
             raise e
       else:
-        return True
-    return False
+        # 制約を全て通過した場合 True を返す
+        return True, pies
+    return False, []
 
-  def check(this, pies: list[Pie]) -> bool:
-    return this.check_rec([], pies, this.structure)
+  def check(self, pies: list[Pie]) -> bool:
+    result, result_pies = self.check_rec([], pies, self.structure)
+    if result:
+      self.run_scripts(result_pies)
+    return result
+
+  def run_prescript(self) -> None:
+    if self.prescript:
+      for script in self.prescript:
+        exec(script, globals() | locals(), globals())
+
+  def run_postscript(self) -> None:
+    if self.postscript:
+      for script in self.postscript:
+        exec(script, globals() | locals(), globals())
+
+  def run_scripts(self, pies: list[Pie]) -> None:
+    Rule().run_script = True
+    self.run_prescript()
+    self.partial_check(pies)
+    self.run_postscript()
+    Rule().run_script = False
 
   def check_rec(
-      this,
+      self,
       current_pies: list[Pie],
       remaining_pies: list[Pie],
       sizes: list[int],
-  ) -> bool:
+  ) -> tuple[bool, list[Pie]]:
     if not sizes and not remaining_pies:
-      return True
+      return True, current_pies
     elif not sizes or not remaining_pies:
-      return False
+      return False, []
 
     current_size = sizes[0]
     if current_size > len(remaining_pies):
-      return False
+      return False, []
 
     pies_index = range(len(remaining_pies))
     current_index_conbinations = list(combinations(pies_index, current_size))
     for current_index_group in current_index_conbinations:
       current_group = [remaining_pies[i] for i in current_index_group]
-      if not this.partial_check(current_pies + current_group):
+      partial_res, _ = self.partial_check(current_pies + current_group)
+      if not partial_res:
         continue
 
       remaining = [
           remaining_pies[i] for i in pies_index if i not in current_index_group
       ]
-      res = this.check_rec(
+      res, res_pies = self.check_rec(
           current_pies + current_group,
           remaining,
           sizes[1:],
       )
       if res:
-        return True
-    return False
+        return True, res_pies
+    return False, []
 
 
 HANDS_CACHE: dict[str, Hand] = {}
@@ -136,28 +159,24 @@ def load_hands(dir_name: str = 'hands') -> dict[str, Hand]:
   for name, body in hands.items():
     structure = list(map(int, str(body['構造']).split(' ')))
     restrictions = build_restriction(body['制約'])
-    score = body['点数']
-    hands_func[name] = Hand(name, structure, restrictions, score)
+    if '前処理' in body.keys():
+      prescript: list[str] = body['前処理']
+    else:
+      prescript = []
+    if '後処理' in body.keys():
+      postscript: list[str] = body['後処理']
+    else:
+      postscript = []
+    hands_func[name] = Hand(name, structure, restrictions, prescript, postscript)
 
   HANDS_CACHE = hands_func
   return hands_func
 
 
 def check_hands(pies: list[Pie], dir_name: str = 'hands') -> list[Hand]:
-  hands = sorted(load_hands(dir_name).values(), key=lambda hand: hand.score)
+  hands = load_hands(dir_name).values()
   result: list[Hand] = []
   for hand in hands:
     if hand.check(pies):
       result.append(hand)
-      if not Rule().combination:
-        break
   return result
-
-
-def get_point(hands: list[Hand]) -> int:
-  if not hands:
-    return 0
-  if not Rule().combination:
-    return max(hand.score for hand in hands)
-  else:
-    return sum(hand.score for hand in hands)

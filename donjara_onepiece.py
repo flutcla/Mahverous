@@ -1,13 +1,14 @@
 # mypy: disable-error-code="name-defined"
 # https://toy.bandai.co.jp/series/donjara/item/detail/13292/
 
+import os
 from timeit import timeit
 
-import os
+from mahverous.hand import Hand, check_hands, load_hands
 from mahverous.init import init
-from mahverous.pie import Pie, load_pies
 from mahverous.part import load_parts
-from mahverous.hand import Hand, load_hands, check_hands, get_point
+from mahverous.pie import Pie, load_pies
+from mahverous.player import Player
 
 CWD = os.getcwd()
 DIR = f'{CWD}/donjara_onepiece'
@@ -85,35 +86,18 @@ def test() -> None:
   ])
 
 
-def check(pies: list[Pie]) -> None:
-  print('----------')
-  print(pies)
-  res: list[Hand] = []
-
-  def inner() -> None:
-    if not res:
-      for r in check_hands(pies):
-        res.append(r)
-  t = timeit(inner, number=1)
-  print(f'成立役: {res}')
-  print(f'得点: {get_point(res)}')
-  print(f'所要時間: {t}')
+# test()
 
 
-check([
+Player([
     キラー, キラー, キラー,
     カイドウ, カイドウ, カイドウ,
-    モンキーDルフィ, ロロノアゾロ, ナミ,
-])
+    # モンキーDルフィ, ロロノアゾロ, ナミ,
+    モンキーDルフィ, トラファルガーロー, ユースタスキッド,
+]).debug_check_hand()
 
-check([
+Player([
     モンキーDルフィ, モンキーDルフィ, モンキーDルフィ,
     ロロノアゾロ, ロロノアゾロ, ロロノアゾロ,
     サンジ, サンジ, サンジ,
-])
-
-check([
-    モンキーDルフィ, モンキーDルフィ, モンキーDルフィ,
-    ロロノアゾロ, ロロノアゾロ, ロロノアゾロ,
-    カイドウ, シャーロットリンリン, オールマイティ,
-])
+]).debug_check_hand()
