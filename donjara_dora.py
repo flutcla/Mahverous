@@ -3,12 +3,13 @@
 # https://www.asovision.com/donjara/dx/pdf/score.pdf
 
 import os
-from timeit import timeit
+from mahverous.game import Game
 
-from mahverous.hand import Hand, check_hands, load_hands
+from mahverous.hand import load_hands
 from mahverous.init import init
 from mahverous.part import load_parts
-from mahverous.pie import Pie, load_pies
+from mahverous.pie import load_pies
+from mahverous.player import Player
 
 CWD = os.getcwd()
 DIR = f'{CWD}/donjara_dora'
@@ -152,61 +153,49 @@ def test() -> None:
   ])
 
 
-test()
+# test()
 
-
-def check(pies: list[Pie]) -> None:
-  print('----------')
-  print(pies),
-  res: list[Hand] = []
-
-  def inner() -> None:
-    if not res:
-      for r in check_hands(pies):
-        res.append(r)
-  t = timeit(inner, number=1)
-  print(f'成立役: {res}')
-  print(f'所要時間: {t}')
-
-
-check([
+Player([
     ドラえもん, ドラえもん, ドラえもん,
     しずか, しずか, しずか,
     ドラえもん, ドラえもんT, ドラえもん,
-])
+]).debug_check_hand()
 
-check([
+Player([
     ドラえもん, ドラえもん, ドラえもん,
     ドラえもん, ドラえもん, ドラえもん,
     ドラえもん, ドラえもん, ドラえもん,
-])
+]).debug_check_hand()
 
-check([
+Player([
     ドラえもん, のび太, しずか,
     ジャイアン, スネ夫, ドラミ,
     のび太のママ, 出木杉, ジャイアンのかあちゃん
-])
+]).debug_check_hand()
 
-check([
+Player([
     ドラえもんT, のび太T, しずかT,
     ドラえもんT, のび太T, しずかT,
     ドラえもんT, のび太T, しずかT,
-])
+]).debug_check_hand()
 
-check([
+Player([
     のび太, のび太T, のび太,
     のび太のママ, のび太のママ, のび太のママ,
     のび太のパパ, のび太のパパ, オールマイティ,
-])
+]).debug_check_hand()
 
-check([
-    オールマイティ, オールマイティ, のび太,
-    のび太のママ, のび太のママ, のび太のママ,
-    のび太のパパ, のび太のパパ, のび太のパパ,
-])
+# Player([
+#     オールマイティ, オールマイティ, のび太,
+#     のび太のママ, のび太のママ, のび太のママ,
+#     のび太のパパ, のび太のパパ, のび太のパパ,
+# ]).debug_check_hand()
 
-check([
+Player([
     ドラえもん, ドラえもんT, のび太,
     のび太T, しずか, しずかT,
     ドラえもん, のび太, スネ夫
-])
+]).debug_check_hand()
+
+game = Game()
+game.play_cli()

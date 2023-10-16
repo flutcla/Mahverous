@@ -15,8 +15,9 @@ def init(working_dir: str) -> None:
 
 class Pie():
   """A class representing a pie."""
-  def __init__(self, display_str: str, isAllmighty: bool = False, **kwargs: dict[str, Any]) -> None:
+  def __init__(self, display_str: str, count: int, isAllmighty: bool = False, **kwargs: dict[str, Any]) -> None:
     self.display_str = display_str
+    self.count = count
     self.isAllmighty = isAllmighty
     for k, v in kwargs.items():
       setattr(self, k, v)
@@ -34,6 +35,10 @@ class Pie():
 
   def __hash__(self) -> int:
     return hash(tuple(self.__dict__.items()))
+
+  def to_str(self) -> str:
+    parameters: list[str] = Rule()['ゲーム']['表示するパラメータ']
+    return self.display_str + ' ' + ' '.join([self.__getattribute__(parameter) for parameter in parameters])
 
 
 PIES_CACHE: dict[str, Pie] = {}
@@ -58,10 +63,10 @@ def load_pies(dir_name: str = 'pies') -> dict[str, Pie]:
 
   ret = {}
   for k, v in pies.items():
-    ret[k] = Pie(k, **(common_param | v))
+    ret[k] = Pie(k, (common_param | v)['枚数'], **(common_param | v))
 
   if Rule().allmighty_count > 0:
-    ret['オールマイティ'] = Pie('オールマイティ', isAllmighty=True)
+    ret['オールマイティ'] = Pie('オールマイティ', Rule().allmighty_count, isAllmighty=True, **common_param)
 
   PIES_CACHE = ret
   return ret

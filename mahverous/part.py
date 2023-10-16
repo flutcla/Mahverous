@@ -5,8 +5,8 @@ from typing import Any
 import yaml
 
 from mahverous.pie import Pie, load_pies
-from mahverous.rule import Rule
 from mahverous.restriction_builder import build_restriction
+from mahverous.rule import Rule
 
 DIR = ''
 

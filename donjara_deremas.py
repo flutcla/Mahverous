@@ -3,12 +3,13 @@
 # https://toy.bandai.co.jp/manuals/manual.php?id=2672881&time=1678931858&sig=1f27e3d145ad747d6328c5f16a4c4600
 
 import os
-from timeit import timeit
+from mahverous.game import Game
 
-from mahverous.hand import Hand, check_hands, load_hands
+from mahverous.hand import load_hands
 from mahverous.init import init
 from mahverous.part import load_parts
-from mahverous.pie import Pie, load_pies
+from mahverous.pie import load_pies
+from mahverous.player import Player
 
 CWD = os.getcwd()
 DIR = f'{CWD}/donjara_deremas'
@@ -68,60 +69,48 @@ def test() -> None:
   ])
 
 
-test()
+# test()
 
-
-def check(pies: list[Pie]) -> None:
-  print('----------')
-  print(pies)
-  res: list[Hand] = []
-
-  def inner() -> None:
-    if not res:
-      for r in check_hands(pies):
-        res.append(r)
-  t = timeit(inner, number=1)
-  print(f'成立役: {res}')
-  print(f'所要時間: {t}')
-
-
-check([
+Player([
     島村卯月, 緒方智絵里, 小早川紗枝,
     佐久間まゆ, 椎名法子, 道明寺歌鈴,
     中野有香, 前川みく, 遊佐こずえ,
-])
+]).debug_check_hand()
 
-check([
+Player([
     島村卯月, 緒方智絵里, 小早川紗枝,
     佐久間まゆ, 椎名法子, 道明寺歌鈴,
     渋谷凛, 川島瑞樹, 桐生つかさ,
-])
+]).debug_check_hand()
 
-check([
+Player([
     十時愛梨, 神崎蘭子, 渋谷凛,
     塩見周子, 島村卯月, 高垣楓,
     安部菜々, 本田未央, 北条加蓮,
-])
+]).debug_check_hand()
 
-check([
+Player([
     小日向美穂, 安部菜々, 島村卯月, 双葉杏, 前川みく,
     渋谷凛, 高垣楓, 鷹富士茄子, 二宮飛鳥,
-])
+]).debug_check_hand()
 
-check([
+Player([
     難波笑美, 緒方智絵里,
     佐藤心, 安部菜々, 高垣楓, 片桐早苗, 三船美優,
     一ノ瀬志希, 宮本フレデリカ,
-])
+]).debug_check_hand()
 
-check([
+Player([
     宮本フレデリカ, 島村卯月, 喜多日菜子,
     小日向美穂, 島村卯月, 緒方智絵里,
     渋谷凛, 島村卯月, 本田未央,
-])
+]).debug_check_hand()
 
-check([
+Player([
     神崎蘭子, 鷺沢文香,
     藤原肇, 三船美優, 桐生つかさ, 星輝子,
     渋谷凛, 島村卯月, 本田未央,
-])
+]).debug_check_hand()
+
+game = Game()
+game.play_cli()

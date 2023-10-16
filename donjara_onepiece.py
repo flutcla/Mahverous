@@ -2,12 +2,12 @@
 # https://toy.bandai.co.jp/series/donjara/item/detail/13292/
 
 import os
-from timeit import timeit
 
-from mahverous.hand import Hand, check_hands, load_hands
+from mahverous.game import Game
+from mahverous.hand import load_hands
 from mahverous.init import init
 from mahverous.part import load_parts
-from mahverous.pie import Pie, load_pies
+from mahverous.pie import load_pies
 from mahverous.player import Player
 
 CWD = os.getcwd()
@@ -101,3 +101,6 @@ Player([
     ロロノアゾロ, ロロノアゾロ, ロロノアゾロ,
     サンジ, サンジ, サンジ,
 ]).debug_check_hand()
+
+game = Game()
+game.play_cli()
