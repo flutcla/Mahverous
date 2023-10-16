@@ -7,18 +7,14 @@ import yaml
 from mahverous.part import load_parts
 from mahverous.pie import Pie, load_pies
 from mahverous.restriction_builder import build_restriction
-from mahverous.rule import load_rule
+from mahverous.rule import Rule
 
 DIR = ''
-rule: Any = None
 
 
 def init(working_dir: str):
   global DIR
   DIR = working_dir
-
-  global rule
-  rule = load_rule()
 
   for name, pie in load_pies().items():
     globals()[name] = pie
@@ -28,13 +24,21 @@ def init(working_dir: str):
 
 
 class Hand():
-  def __init__(self, structure: list[int], restrictions: list[str]):
+  def __init__(self, name: str, structure: list[int], restrictions: list[str], score: int):
+    self.name = name
     self.structure = structure
     self.restrictions = restrictions
-    self.variables = [chr(i) for i in range(ord('a'), ord('a') + rule['完成形の枚数'])]
+    self.score = score
+    self.variables = [chr(i) for i in range(ord('a'), ord('a') + Rule().hand_count)]
 
   def __call__(this, pies):
     return this.check(pies)
+
+  def __str__(self) -> str:
+    return self.name
+
+  def __repr__(self) -> str:
+    return str(self)
 
   def replace_allmighty(this, pies_list: list[list[Pie]]):
     all_pies = load_pies().copy()
@@ -132,16 +136,28 @@ def load_hands(dir_name: str = 'hands') -> dict[str, Hand]:
   for name, body in hands.items():
     structure = list(map(int, str(body['構造']).split(' ')))
     restrictions = build_restriction(body['制約'])
-    hands_func[name] = Hand(structure, restrictions)
+    score = body['点数']
+    hands_func[name] = Hand(name, structure, restrictions, score)
 
   HANDS_CACHE = hands_func
   return hands_func
 
 
-def check_hands(pies: list[Pie], dir_name='hands'):
-  hands = load_hands(dir_name)
-  result = []
-  for name, hand in hands.items():
+def check_hands(pies: list[Pie], dir_name='hands') -> list[Hand]:
+  hands = sorted(load_hands(dir_name).values(), key=lambda hand: hand.score)
+  result: list[Hand] = []
+  for hand in hands:
     if hand.check(pies):
-      result.append(name)
+      result.append(hand)
+      if not Rule().combination:
+        break
   return result
+
+
+def get_point(hands: list[Hand]) -> int:
+  if not hands:
+    return 0
+  if not Rule().combination:
+    return max(hand.score for hand in hands)
+  else:
+    return sum(hand.score for hand in hands)

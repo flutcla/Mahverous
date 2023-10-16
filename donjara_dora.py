@@ -8,7 +8,7 @@ import os
 from mahverous.init import init
 from mahverous.pie import load_pies
 from mahverous.part import load_parts
-from mahverous.hand import load_hands, check_hands
+from mahverous.hand import load_hands, check_hands, get_point
 
 CWD = os.getcwd()
 DIR = f'{CWD}/donjara_dora'
@@ -155,7 +155,7 @@ def test():
 test()
 
 
-def check(hands, n=10):
+def check(hands, n=1):
   print('----------')
   print(hands)
   res = []
@@ -164,9 +164,10 @@ def check(hands, n=10):
     if not res:
       for r in check_hands(hands):
         res.append(r)
-  t = timeit(inner, number=n) / n
-  print(res)
-  print(f'平均所要時間: {t}')
+  t = timeit(inner, number=1)
+  print(f'成立役: {res}')
+  print(f'得点: {get_point(res)}')
+  print(f'所要時間: {t}')
 
 
 check([
@@ -203,7 +204,7 @@ check([
     オールマイティ, オールマイティ, のび太,
     のび太のママ, のび太のママ, のび太のママ,
     のび太のパパ, のび太のパパ, のび太のパパ,
-], n=5)
+])
 
 check([
     ドラえもん, ドラえもんT, のび太,

@@ -3,24 +3,21 @@ from typing import Any
 
 import yaml
 
-from mahverous.rule import load_rule
+from mahverous.rule import Rule
 
 DIR = ''
-rule: Any = None
 
 
 def init(working_dir: str):
   global DIR
   DIR = working_dir
 
-  global rule
-  rule = load_rule()
-
 
 class Pie():
   """A class representing a pie."""
   def __init__(self, display_str, isAllmighty=False, **kwargs):
     self.display_str = display_str
+    self.isAllmighty = isAllmighty
     for k, v in kwargs.items():
       setattr(self, k, v)
 
@@ -63,7 +60,7 @@ def load_pies(dir_name: str = 'pies') -> dict[str, Pie]:
   for k, v in pies.items():
     ret[k] = Pie(k, **(common_param | v))
 
-  if rule['オールマイティの枚数'] > 0:
+  if Rule().allmighty_count > 0:
     ret['オールマイティ'] = Pie('オールマイティ', isAllmighty=True)
 
   PIES_CACHE = ret
