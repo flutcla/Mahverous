@@ -6,7 +6,7 @@ import yaml
 DIR = ''
 
 
-def init(working_dir: str):
+def init(working_dir: str) -> None:
   global DIR
   DIR = working_dir
   Rule()

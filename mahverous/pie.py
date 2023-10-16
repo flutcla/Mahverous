@@ -8,23 +8,23 @@ from mahverous.rule import Rule
 DIR = ''
 
 
-def init(working_dir: str):
+def init(working_dir: str) -> None:
   global DIR
   DIR = working_dir
 
 
 class Pie():
   """A class representing a pie."""
-  def __init__(self, display_str, isAllmighty=False, **kwargs):
+  def __init__(self, display_str: str, isAllmighty: bool = False, **kwargs: dict[str, Any]) -> None:
     self.display_str = display_str
     self.isAllmighty = isAllmighty
     for k, v in kwargs.items():
       setattr(self, k, v)
 
-  def __str__(self):
+  def __str__(self) -> str:
     return self.display_str
 
-  def __repr__(self):
+  def __repr__(self) -> str:
     return self.display_str
 
   def __eq__(self, __value: object) -> bool:

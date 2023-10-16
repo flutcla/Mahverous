@@ -74,11 +74,11 @@ assert 字一色([
 ])
 
 
-def check(hands: list[Pie], n=10):
+def check(pies: list[Pie]) -> None:
   print('----------')
-  print(hands)
-  t = timeit(lambda: check_hands(hands), number=n) / n
-  print(check_hands(hands))
+  print(pies)
+  t = timeit(lambda: check_hands(pies), number=1)
+  print(check_hands(pies))
   print(f'平均所要時間: {t}')
 
 
@@ -88,7 +88,7 @@ check([
     西, 西, 西,
     北, 北, 北,
     索1, 索1
-], n=1)
+])
 
 check([
     索1, 索1,
@@ -96,7 +96,7 @@ check([
     南, 南, 南,
     東, 東, 東,
     西, 西, 西
-], n=1)
+])
 
 check([
     索1, 索1, 索1,
@@ -104,7 +104,7 @@ check([
     索3, 索3, 索3,
     索4, 索4, 索4,
     索5, 索5
-], n=1)
+])
 
 check([
     索1, 索1,
@@ -114,7 +114,7 @@ check([
     索5, 索5,
     索6, 索6,
     索7, 索7,
-], n=1)
+])
 
 check([
     索1, 索2, 索3,
@@ -122,4 +122,4 @@ check([
     索7, 索8, 索9,
     筒1, 筒2, 筒3,
     筒4, 筒5
-], n=1)
+])

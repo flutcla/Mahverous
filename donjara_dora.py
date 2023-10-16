@@ -6,9 +6,9 @@ from timeit import timeit
 
 import os
 from mahverous.init import init
-from mahverous.pie import load_pies
+from mahverous.pie import Pie, load_pies
 from mahverous.part import load_parts
-from mahverous.hand import load_hands, check_hands, get_point
+from mahverous.hand import Hand, load_hands, check_hands, get_point
 
 CWD = os.getcwd()
 DIR = f'{CWD}/donjara_dora'
@@ -28,7 +28,7 @@ for name, hand in hands.items():
   locals()[name] = hand
 
 
-def test():
+def test() -> None:
   assert ミラクルセット([
       ドラえもん, ドラえもん, ドラえもん,
       ドラえもんT, ドラえもん, ドラえもん,
@@ -155,14 +155,14 @@ def test():
 test()
 
 
-def check(hands, n=1):
+def check(pies: list[Pie]) -> None:
   print('----------')
-  print(hands)
-  res = []
+  print(pies),
+  res: list[Hand] = []
 
-  def inner():
+  def inner() -> None:
     if not res:
-      for r in check_hands(hands):
+      for r in check_hands(pies):
         res.append(r)
   t = timeit(inner, number=1)
   print(f'成立役: {res}')

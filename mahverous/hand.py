@@ -12,7 +12,7 @@ from mahverous.rule import Rule
 DIR = ''
 
 
-def init(working_dir: str):
+def init(working_dir: str) -> None:
   global DIR
   DIR = working_dir
 
@@ -31,7 +31,7 @@ class Hand():
     self.score = score
     self.variables = [chr(i) for i in range(ord('a'), ord('a') + Rule().hand_count)]
 
-  def __call__(this, pies):
+  def __call__(this, pies: list[Pie]) -> bool:
     return this.check(pies)
 
   def __str__(self) -> str:
@@ -40,7 +40,7 @@ class Hand():
   def __repr__(self) -> str:
     return str(self)
 
-  def replace_allmighty(this, pies_list: list[list[Pie]]):
+  def replace_allmighty(this, pies_list: list[list[Pie]]) -> list[list[Pie]]:
     all_pies = load_pies().copy()
     allmighty = all_pies.pop('オールマイティ')
     if allmighty not in pies_list[0]:
@@ -52,7 +52,7 @@ class Hand():
         ret.append([pie if i == idx else p for i, p in enumerate(pies)])
     return this.replace_allmighty(ret)
 
-  def partial_check(this, pies: list[Pie]):
+  def partial_check(this, pies: list[Pie]) -> bool:
     # オールマイティがある場合、全牌を試す
     all_pies = load_pies().copy()
     if 'オールマイティ' in all_pies.keys():
@@ -81,7 +81,7 @@ class Hand():
         return True
     return False
 
-  def check(this, pies: list[Pie]):
+  def check(this, pies: list[Pie]) -> bool:
     return this.check_rec([], pies, this.structure)
 
   def check_rec(
@@ -143,7 +143,7 @@ def load_hands(dir_name: str = 'hands') -> dict[str, Hand]:
   return hands_func
 
 
-def check_hands(pies: list[Pie], dir_name='hands') -> list[Hand]:
+def check_hands(pies: list[Pie], dir_name: str = 'hands') -> list[Hand]:
   hands = sorted(load_hands(dir_name).values(), key=lambda hand: hand.score)
   result: list[Hand] = []
   for hand in hands:

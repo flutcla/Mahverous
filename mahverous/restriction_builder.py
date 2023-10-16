@@ -17,13 +17,13 @@ class Builder():
   def fresh_var_gen(self) -> Generator[Symbol, None, None]:
     i = 0
     while True:
-      yield Symbol(f'var_{str(i)}_')
+      yield Symbol(f'var_{str(i)}_')  # type: ignore
       i += 1
 
   def make_fresh_symbol(self) -> Symbol:
     return next(self.gen)
 
-  def expr_to_symbol(self, expr: str):
+  def expr_to_symbol(self, expr: str) -> Symbol:
     if expr in self.expr_to_symbol_dict.keys():
       return self.expr_to_symbol_dict[expr]
     else:
@@ -32,7 +32,7 @@ class Builder():
       self.symbol_to_expr_dict[symbol] = expr
       return symbol
 
-  def symbol_to_expr(self, symbol: Symbol):
+  def symbol_to_expr(self, symbol: Symbol) -> str:
     return self.symbol_to_expr_dict[symbol]
 
   def to_sympy(self, expr: list[Any]) -> list[Symbol | And | Or]:
@@ -42,27 +42,27 @@ class Builder():
       subexpr = queue.popleft()
       if subexpr == 'or':
         operands = queue.popleft()
-        ret.append(Or(*self.to_sympy(operands)))
+        ret.append(Or(*self.to_sympy(operands)))  # type: ignore
       elif subexpr == 'and':
         operands = queue.popleft()
-        ret.append(And(*self.to_sympy(operands)))
+        ret.append(And(*self.to_sympy(operands)))  # type: ignore
       else:
         ret.append(self.expr_to_symbol(subexpr))
     return ret
 
-  def build(self, expr):
-    cnf_str = str(to_cnf(self.to_sympy(expr)[0]))
+  def build(self, expr: list[Any]) -> list[str]:
+    cnf_str = str(to_cnf(self.to_sympy(expr)[0]))  # type: ignore
     closures = [s.strip(' ()') for s in cnf_str.split('&')]
-    replaced_closures = []
+    replaced_closures: list[str] = []
     for closure in closures:
       replaced = closure.replace('|', ' or ').replace('~', ' not ')
-      for symbol, expr in self.symbol_to_expr_dict.items():
-        replaced = replaced.replace(str(symbol), expr)
+      for symbol, _expr in self.symbol_to_expr_dict.items():
+        replaced = replaced.replace(str(symbol), _expr)
       replaced_closures.append(replaced)
     return replaced_closures
 
 
-def build_restriction(expr: list[Any]):
+def build_restriction(expr: list[Any]) -> list[str]:
   return Builder().build(expr)
 
 

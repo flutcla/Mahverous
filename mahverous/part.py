@@ -4,13 +4,13 @@ from typing import Any
 
 import yaml
 
-from mahverous.pie import load_pies
+from mahverous.pie import Pie, load_pies
 from mahverous.restriction_builder import build_restriction
 
 DIR = ''
 
 
-def init(working_dir: str):
+def init(working_dir: str) -> None:
   global DIR
   DIR = working_dir
   for name, pie in load_pies().items():
@@ -22,12 +22,12 @@ def init(working_dir: str):
 
 class Part():
   """A class representing a part."""
-  def __init__(this, variables, restrictions, ordered):
+  def __init__(this, variables: list[str], restrictions: list[str], ordered: bool) -> None:
     this.variables = variables
     this.restrictions = restrictions
     this.ordered = ordered
 
-  def __call__(this, *args):
+  def __call__(this, *args: Pie) -> bool:
     # 順番が存在するパーツを検査する場合、全通り試す
     if this.ordered:
       args_perm = list(permutations(args))
