@@ -217,5 +217,8 @@ def get_from_cache(key: frozenset[Pie]) -> list[tuple[list[Pie], Hand]] | None:
   if not os.path.exists(f'{DIR}/cache.pickle'):
     return None
   with open(f'{DIR}/cache.pickle', 'rb') as f:
-    CHECK_CACHE: dict[frozenset[Pie], list[tuple[list[Pie], Hand]]] = pickle.load(f)
+    try:
+      CHECK_CACHE: dict[frozenset[Pie], list[tuple[list[Pie], Hand]]] = pickle.load(f)
+    except pickle.UnpicklingError:
+      return None
   return CHECK_CACHE.get(key, None)
