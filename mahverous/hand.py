@@ -203,7 +203,7 @@ def add_to_cache(key: frozenset[Pie], value: list[tuple[list[Pie], Hand]]) -> No
     with open(f'{DIR}/cache.pickle', 'rb') as f:
       try:
         CHECK_CACHE = pickle.load(f)
-      except pickle.UnpicklingError:
+      except (pickle.UnpicklingError, EOFError):
         return
     CHECK_CACHE[key] = value
   else:
@@ -219,6 +219,6 @@ def get_from_cache(key: frozenset[Pie]) -> list[tuple[list[Pie], Hand]] | None:
   with open(f'{DIR}/cache.pickle', 'rb') as f:
     try:
       CHECK_CACHE: dict[frozenset[Pie], list[tuple[list[Pie], Hand]]] = pickle.load(f)
-    except pickle.UnpicklingError:
+    except (pickle.UnpicklingError, EOFError):
       return None
   return CHECK_CACHE.get(key, None)
