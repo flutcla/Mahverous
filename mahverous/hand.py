@@ -33,7 +33,8 @@ class Hand():
     self.variables = [chr(i) for i in range(ord('a'), ord('a') + Rule().hand_count)]
 
   def __call__(self, pies: list[Pie]) -> bool:
-    return self.check(pies)
+    result, result_pies = self.check(pies)
+    return result
 
   def __str__(self) -> str:
     return self.name
@@ -83,11 +84,11 @@ class Hand():
         return True, pies
     return False, []
 
-  def check(self, pies: list[Pie]) -> bool:
+  def check(self, pies: list[Pie]) -> tuple[bool, list[Pie]]:
     result, result_pies = self.check_rec([], pies, self.structure)
     if result:
       self.run_scripts(result_pies)
-    return result
+    return result, result_pies
 
   def run_prescript(self) -> None:
     if self.prescript:
@@ -173,10 +174,24 @@ def load_hands(dir_name: str = 'hands') -> dict[str, Hand]:
   return hands_func
 
 
+CHECK_CACHE: dict[tuple[Pie, ...], list[tuple[list[Pie], Hand]]] = {}
+
+
 def check_hands(pies: list[Pie], dir_name: str = 'hands') -> list[Hand]:
-  hands = load_hands(dir_name).values()
-  result: list[Hand] = []
-  for hand in hands:
-    if hand.check(pies):
+  if tuple(pies) in CHECK_CACHE.keys():
+    result: list[Hand] = []
+    for pies_, hand in CHECK_CACHE[tuple(pies)]:
+      hand.check(pies_)
       result.append(hand)
+    return result
+
+  hands = load_hands(dir_name).values()
+  result = []
+  result_hands_list: list[list[Pie]] = []
+  for hand in hands:
+    res, result_hands = hand.check(pies)
+    if res:
+      result.append(hand)
+      result_hands_list.append(result_hands)
+  CHECK_CACHE[tuple(pies)] = [(pies_, hand) for pies_, hand in zip(result_hands_list, result)]
   return result
