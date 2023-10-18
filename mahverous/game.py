@@ -1,3 +1,5 @@
+import asyncio
+import itertools
 import os
 import random
 from collections import deque
@@ -115,6 +117,10 @@ class Game():
       else:
         pop_pie = tsumo
       print(f'{pop_pie.to_str()} を捨てました。')
+
+      # 判定の先読み
+      for p in itertools.islice(self.wall_tiles, 0, 5):
+        asyncio.new_event_loop().run_in_executor(None, self.current_player.check_hand, p)
 
       # ロン判定
       if not pop_pie.is_allmighty:

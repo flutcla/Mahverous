@@ -178,7 +178,7 @@ def load_hands(dir_name: str = 'hands') -> dict[str, Hand]:
 
 def check_hands(pies: list[Pie], dir_name: str = 'hands') -> list[Hand]:
   cache = get_from_cache(frozenset(pies))
-  if cache:
+  if cache is not None:
     result: list[Hand] = []
     for pies_, hand in cache:
       hand.check(pies_)
