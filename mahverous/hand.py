@@ -1,5 +1,7 @@
 import glob
 from itertools import combinations
+import os
+import pickle
 from typing import Any
 
 import yaml
@@ -174,13 +176,11 @@ def load_hands(dir_name: str = 'hands') -> dict[str, Hand]:
   return hands_func
 
 
-CHECK_CACHE: dict[tuple[Pie, ...], list[tuple[list[Pie], Hand]]] = {}
-
-
 def check_hands(pies: list[Pie], dir_name: str = 'hands') -> list[Hand]:
-  if tuple(pies) in CHECK_CACHE.keys():
+  cache = get_from_cache(frozenset(pies))
+  if cache:
     result: list[Hand] = []
-    for pies_, hand in CHECK_CACHE[tuple(pies)]:
+    for pies_, hand in cache:
       hand.check(pies_)
       result.append(hand)
     return result
@@ -193,5 +193,26 @@ def check_hands(pies: list[Pie], dir_name: str = 'hands') -> list[Hand]:
     if res:
       result.append(hand)
       result_hands_list.append(result_hands)
-  CHECK_CACHE[tuple(pies)] = [(pies_, hand) for pies_, hand in zip(result_hands_list, result)]
+  add_to_cache(frozenset(pies), [(pies_, hand) for pies_, hand in zip(result_hands_list, result)])
   return result
+
+
+def add_to_cache(key: frozenset[Pie], value: list[tuple[list[Pie], Hand]]) -> None:
+  DIR = os.environ['WORK_DIR']
+  if os.path.exists(f'{DIR}/cache.pickle'):
+    with open(f'{DIR}/cache.pickle', 'rb') as f:
+      CHECK_CACHE = pickle.load(f)
+    CHECK_CACHE[key] = value
+  else:
+    CHECK_CACHE = {key: value}
+  with open(f'{DIR}/cache.pickle', 'wb') as f:
+    pickle.dump(CHECK_CACHE, f)
+
+
+def get_from_cache(key: frozenset[Pie]) -> list[tuple[list[Pie], Hand]] | None:
+  DIR = os.environ['WORK_DIR']
+  if not os.path.exists(f'{DIR}/cache.pickle'):
+    return None
+  with open(f'{DIR}/cache.pickle', 'rb') as f:
+    CHECK_CACHE: dict[frozenset[Pie], list[tuple[list[Pie], Hand]]] = pickle.load(f)
+  return CHECK_CACHE.get(key, None)
