@@ -201,7 +201,10 @@ def add_to_cache(key: frozenset[Pie], value: list[tuple[list[Pie], Hand]]) -> No
   DIR = os.environ['WORK_DIR']
   if os.path.exists(f'{DIR}/cache.pickle'):
     with open(f'{DIR}/cache.pickle', 'rb') as f:
-      CHECK_CACHE = pickle.load(f)
+      try:
+        CHECK_CACHE = pickle.load(f)
+      except pickle.UnpicklingError:
+        return
     CHECK_CACHE[key] = value
   else:
     CHECK_CACHE = {key: value}
