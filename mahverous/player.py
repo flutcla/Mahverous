@@ -9,10 +9,12 @@ from mahverous.rule import Rule
 class Player():
   name: str
   hand: list[Pie]
+  score: int
 
-  def __init__(self, hand: list[Pie], name: str = 'Anonymous') -> None:
+  def __init__(self, hand: list[Pie], name: str = 'Anonymous', score: int = 0) -> None:
     self.hand = hand
     self.name = name
+    self.score = score
 
   def __str__(self) -> str:
     return self.name
