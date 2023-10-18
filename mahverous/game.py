@@ -98,6 +98,22 @@ class Game():
       else:
         pop_pie = tsumo
       print(f'{pop_pie.to_str()} を捨てました')
+
+      # ロン判定
+      if not pop_pie.is_allmighty:
+        for player in self.players:
+          if player == self.current_player:
+            continue
+          msg = '役の判定中……'
+          print(msg, end='', flush=True)
+          res = player.check_hand(pop_pie)
+          print('\b' * len(msg) * 2, end='', flush=True)
+          if res:
+            print(f'{player} あがり！')
+            print(player.hand_to_str())
+            print(f'{Rule().点数}点: {Rule().成立役}')  # type: ignore
+            exit()
+
       self.increment_player()
 
 
