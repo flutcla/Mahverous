@@ -170,11 +170,8 @@ class Game():
 
     if self.current_game_count == self.game_count:
       exit()
-    gc = self.current_game_count
 
     self.reset()
-    self.current_game_count = gc + 1
-    self.current_player_index = self.current_game_count % len(self.players)
     wait_for_enter(f'第 {self.current_game_count} 局を開始します。')
     self.play_cli()
 
