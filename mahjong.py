@@ -1,8 +1,8 @@
 # mypy: disable-error-code="name-defined"
 
 import os
-from mahverous.game import Game
 
+from mahverous.game import Game
 from mahverous.hand import load_hands
 from mahverous.init import init
 from mahverous.part import load_parts

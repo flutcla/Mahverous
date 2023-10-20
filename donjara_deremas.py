@@ -3,8 +3,8 @@
 # https://toy.bandai.co.jp/manuals/manual.php?id=2672881&time=1678931858&sig=1f27e3d145ad747d6328c5f16a4c4600
 
 import os
-from mahverous.game import Game
 
+from mahverous.game import Game
 from mahverous.hand import load_hands
 from mahverous.init import init
 from mahverous.part import load_parts

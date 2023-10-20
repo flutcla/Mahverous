@@ -1,3 +1,9 @@
+[scripts]
+lint = "zsh -c 'flake8 -- . ; mypy .'"
+format = "zsh -c 'isort . ; pipenv run autopep8'"
+autopep8 = "find -type f -name '*.py' -exec autopep8 '{}' ;"
+clean-cache = "find -type f -name 'cache.pickle' -delete"
+
 [[source]]
 url = "https://pypi.org/simple"
 verify_ssl = true
@@ -8,10 +14,11 @@ sympy = "*"
 pyyaml = "*"
 
 [dev-packages]
-black = "*"
 flake8 = "*"
 isort = "*"
 mypy = "*"
+types-pyyaml = "*"
+autopep8 = "*"
 
 [requires]
 python_version = "3.12"

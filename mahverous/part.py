@@ -25,7 +25,14 @@ def init(working_dir: str) -> None:
 
 class Part():
   """A class representing a part."""
-  def __init__(self, variables: list[str], restrictions: list[str], prescrpt: list[str], postscript: list[str], ordered: bool) -> None:
+
+  def __init__(
+          self,
+          variables: list[str],
+          restrictions: list[str],
+          prescrpt: list[str],
+          postscript: list[str],
+          ordered: bool) -> None:
     self.variables = variables
     self.restrictions = restrictions
     self.prescript = prescrpt

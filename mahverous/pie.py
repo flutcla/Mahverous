@@ -15,7 +15,13 @@ def init(working_dir: str) -> None:
 
 class Pie():
   """A class representing a pie."""
-  def __init__(self, display_str: str, count: int, is_allmighty: bool = False, **kwargs: dict[str, Any]) -> None:
+
+  def __init__(self,
+               display_str: str,
+               count: int,
+               is_allmighty: bool = False,
+               **kwargs: dict[str,
+                              Any]) -> None:
     self.display_str = display_str
     self.名前 = display_str
     self.count = count
@@ -67,7 +73,11 @@ def load_pies(dir_name: str = 'pies') -> dict[str, Pie]:
     ret[k] = Pie(k, (common_param | v)['枚数'], **(common_param | v))
 
   if Rule().allmighty_count > 0:
-    ret['オールマイティ'] = Pie('オールマイティ', Rule().allmighty_count, is_allmighty=True, **common_param)
+    ret['オールマイティ'] = Pie(
+        'オールマイティ',
+        Rule().allmighty_count,
+        is_allmighty=True,
+        **common_param)
 
   PIES_CACHE = ret
   return ret

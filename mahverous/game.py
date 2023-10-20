@@ -3,8 +3,8 @@ import itertools
 import os
 import random
 from collections import deque
-from typing import Self
 from concurrent.futures import ProcessPoolExecutor
+from typing import Self
 
 from mahverous import hand as hand_
 from mahverous import part as part_
@@ -13,6 +13,7 @@ from mahverous import rule as rule_
 from mahverous.pie import Pie, load_pies
 from mahverous.player import Player
 from mahverous.rule import Rule
+
 loop = asyncio.get_event_loop()
 executor = ProcessPoolExecutor(max_workers=5)
 
@@ -141,7 +142,11 @@ class Game():
       input('Enterを押してください......')
       clear_console()
 
-  def game_end(self, win_player: Player, agari_pie: Pie, ron: Player | None = None) -> None:
+  def game_end(
+          self,
+          win_player: Player,
+          agari_pie: Pie,
+          ron: Player | None = None) -> None:
     score = Rule().点数  # type: ignore
     score_strings = ['', '- 点数表 -']
     win_player.score += score
