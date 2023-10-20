@@ -4,6 +4,7 @@ import os
 import random
 from collections import deque
 from typing import Self
+from concurrent.futures import ProcessPoolExecutor
 
 from mahverous import hand as hand_
 from mahverous import part as part_
@@ -12,6 +13,8 @@ from mahverous import rule as rule_
 from mahverous.pie import Pie, load_pies
 from mahverous.player import Player
 from mahverous.rule import Rule
+loop = asyncio.get_event_loop()
+executor = ProcessPoolExecutor(max_workers=5)
 
 
 class Game():
@@ -120,7 +123,7 @@ class Game():
 
       # 判定の先読み
       for p in itertools.islice(self.wall_tiles, 0, 5):
-        asyncio.new_event_loop().run_in_executor(None, self.current_player.check_hand, p)
+        loop.run_in_executor(executor, self.current_player.check_hand, p)
 
       # ロン判定
       if not pop_pie.is_allmighty:

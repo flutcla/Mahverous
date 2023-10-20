@@ -20,6 +20,8 @@ class Rule():
   combination: bool
   run_script = False
   items: dict[str, Any]
+  prescript: list[str]
+  postscript: list[str]
 
   def __new__(cls) -> Self:
     if cls.instance:
@@ -32,8 +34,8 @@ class Rule():
     cls.allmighty_count = int(rule['オールマイティの枚数'])
     cls.combination = rule['役の複合']
 
-    cls.presciprt: list[str] = rule.get('前処理', [])
-    cls.postscript: list[str] = rule.get('後処理', [])
+    cls.prescript = rule.get('前処理', [])
+    cls.postscript = rule.get('後処理', [])
 
     cls.items = rule
 
@@ -41,7 +43,7 @@ class Rule():
 
   @classmethod
   def run_prescript(cls) -> None:
-    for script in cls.presciprt:
+    for script in cls.prescript:
       exec(script, globals())
 
   @classmethod
