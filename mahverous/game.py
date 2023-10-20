@@ -3,8 +3,8 @@ import itertools
 import os
 import random
 from collections import deque
-from typing import Self
 from concurrent.futures import ProcessPoolExecutor
+from typing import Self
 
 from mahverous import hand as hand_
 from mahverous import part as part_
@@ -142,7 +142,11 @@ class Game():
       input('Enterを押してください......')
       clear_console()
 
-  def game_end(self, win_player: Player, agari_pie: Pie, ron: Player | None = None) -> None:
+  def game_end(
+          self,
+          win_player: Player,
+          agari_pie: Pie,
+          ron: Player | None = None) -> None:
     score = Rule().点数  # type: ignore
     score_strings = ['', '- 点数表 -']
     win_player.score += score

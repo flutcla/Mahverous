@@ -1,7 +1,7 @@
 import glob
-from itertools import combinations
 import os
 import pickle
+from itertools import combinations
 from typing import Any
 
 import yaml
@@ -26,7 +26,13 @@ def init(working_dir: str) -> None:
 
 
 class Hand():
-  def __init__(self, name: str, structure: list[int], restrictions: list[str], prescript: list[str], postscript: list[str]) -> None:
+  def __init__(
+          self,
+          name: str,
+          structure: list[int],
+          restrictions: list[str],
+          prescript: list[str],
+          postscript: list[str]) -> None:
     self.name = name
     self.structure = structure
     self.restrictions = restrictions
@@ -193,7 +199,8 @@ def check_hands(pies: list[Pie], dir_name: str = 'hands') -> list[Hand]:
     if res:
       result.append(hand)
       result_hands_list.append(result_hands)
-  add_to_cache(frozenset(pies), [(pies_, hand) for pies_, hand in zip(result_hands_list, result)])
+  add_to_cache(frozenset(pies), [(pies_, hand)
+               for pies_, hand in zip(result_hands_list, result)])
   return result
 
 
