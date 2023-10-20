@@ -17,6 +17,7 @@ class Pie():
   """A class representing a pie."""
   def __init__(self, display_str: str, count: int, is_allmighty: bool = False, **kwargs: dict[str, Any]) -> None:
     self.display_str = display_str
+    self.名前 = display_str
     self.count = count
     self.is_allmighty = is_allmighty
     for k, v in kwargs.items():
@@ -38,7 +39,7 @@ class Pie():
 
   def to_str(self) -> str:
     parameters: list[str] = Rule()['ゲーム']['表示するパラメータ']
-    return self.display_str + ' ' + ' '.join([self.__getattribute__(parameter) for parameter in parameters])
+    return ' '.join([str(self.__getattribute__(parameter)) for parameter in parameters])
 
 
 PIES_CACHE: dict[str, Pie] = {}
