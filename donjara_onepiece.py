@@ -102,5 +102,11 @@ Player([
     サンジ, サンジ, サンジ,
 ]).debug_check_hand()
 
+Player([
+    イッショウ, サボ, シリュウ,
+    ジンベエ, モンキーDルフィ, トニートニーチョッパー,
+    サンジ, サンジ, ハック
+]).debug_check_hand()
+
 game = Game()
 game.play_cli()

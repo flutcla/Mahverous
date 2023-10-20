@@ -197,5 +197,11 @@ Player([
     のび太のパパ, のび太のパパ, のび太のパパ,
 ]).debug_check_hand()
 
+Player([
+    オールマイティ, ドラミ, ドラミ,
+    ドラミ, ドラミ, のび太,
+    スネ夫, スネ夫, スネ夫
+]).debug_check_hand()
+
 game = Game()
 game.play_cli()

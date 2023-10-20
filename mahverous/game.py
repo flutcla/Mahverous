@@ -13,6 +13,7 @@ from mahverous import rule as rule_
 from mahverous.pie import Pie, load_pies
 from mahverous.player import Player
 from mahverous.rule import Rule
+random.seed(0)
 loop = asyncio.get_event_loop()
 executor = ProcessPoolExecutor(max_workers=5)
 
